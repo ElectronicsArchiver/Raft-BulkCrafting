@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class CraftModifierKeys : MonoBehaviour
 {
@@ -32,7 +34,7 @@ public class CraftModifierKeys : MonoBehaviour
         // We got a new selected recipe, or the first one.
         if (originalItem != SelectedRecipeBox.ItemToCraft)
         {
-            Debug.Log(CraftFromAllStorageMod.ModNamePrefix + " A new recipe was selected, restoring original cost.");
+            Debug.Log(BulkCrafting.ModNamePrefix + " A new recipe was selected, restoring original cost.");
 
             if (originalItem != null)
             {
