@@ -35,9 +35,24 @@ public class BulkCrafting : Mod
 
     private static void AddCraftModifierKeysToSelectedRecipeBox()
     {
-        var recipeBox = ComponentManager<CraftingMenu>.Value.selectedRecipeBox;
-       
-        var craftModifierKeys = recipeBox.GetComponent<CraftModifierKeys>() ?? recipeBox.gameObject.AddComponent<CraftModifierKeys>();
-        craftModifierKeys.SelectedRecipeBox = recipeBox;
+        var craftingMenu = ComponentManager<CraftingMenu>.Value;
+
+        if (craftingMenu == null)
+        {
+            return;
+        }
+
+        var recipeBox = craftingMenu.selectedRecipeBox;
+
+        if (recipeBox != null)
+        {
+            var craftModifierKeys = recipeBox.GetComponent<CraftModifierKeys>() ?? recipeBox.gameObject.AddComponent<CraftModifierKeys>();
+            craftModifierKeys.SelectedRecipeBox = recipeBox;
+            Debug.Log(ModNamePrefix + " RecipeBox has been patched");
+        }
+        else
+        {
+            Debug.Log(ModNamePrefix + " RecipeBox could not be patched");
+        }
     }
 }
