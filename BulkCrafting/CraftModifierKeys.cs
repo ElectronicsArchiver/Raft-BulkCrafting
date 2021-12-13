@@ -10,7 +10,7 @@ public class CraftModifierKeys : MonoBehaviour
     private Text craftButtonText;
     private string originalCraftButtonText;
     private int multiplier = 10;
-    private Dictionary<string, int> originalNewCost = new Dictionary<string, int>();
+    private Dictionary<CostMultiple, int> originalNewCost = new Dictionary<CostMultiple, int>();
     private Item_Base originalItem;
     private bool leftShiftModifier = false;
 
@@ -94,27 +94,24 @@ public class CraftModifierKeys : MonoBehaviour
 
     private void RestoreOriginalCostMultiple()
     {
-        foreach (var costMultiple in SelectedRecipeBox.ItemToCraft.settings_recipe.NewCost)
+        foreach (var pair in originalNewCost)
         {
-            foreach (var item in costMultiple.items)
+            if (pair.Key != null)
             {
-                if (originalNewCost.TryGetValue(item.UniqueName, out var amount))
-                {
-                    costMultiple.amount = amount;
-                }
+                pair.Key.amount = pair.Value;
             }
         }
+
+        originalNewCost.Clear();
     }
 
     private void CacheOriginalCostMultiple()
     {
-        originalNewCost.Clear();
-
         foreach (var costMultiple in SelectedRecipeBox.ItemToCraft.settings_recipe.NewCost)
         {
-            foreach (var item in costMultiple.items)
+            if (!originalNewCost.ContainsKey(costMultiple))
             {
-                originalNewCost.Add(item.UniqueName, costMultiple.amount);
+                originalNewCost.Add(costMultiple, costMultiple.amount);
             }
         }
     }
