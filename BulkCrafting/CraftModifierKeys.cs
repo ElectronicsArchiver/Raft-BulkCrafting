@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: there seems o be an issue with the recipe being stuck after you press quick craft making it increment the cost repeatedly.
 public class CraftModifierKeys : MonoBehaviour
 {
 
@@ -18,7 +19,7 @@ public class CraftModifierKeys : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("CraftModifierKeys started");
+        Debug.Log(BulkCrafting.ModNamePrefix + "CraftModifierKeys started");
         craftButtonText = SelectedRecipeBox.craftButton.GetComponentInChildren<Text>();
         originalCraftButtonText = craftButtonText.text;
     }
@@ -34,18 +35,18 @@ public class CraftModifierKeys : MonoBehaviour
         // We got a new selected recipe, or the first one.
         if (originalItem != SelectedRecipeBox.ItemToCraft)
         {
-            Debug.Log(BulkCrafting.ModNamePrefix + " A new recipe was selected, restoring original cost.");
+            Debug.Log(BulkCrafting.ModNamePrefix + " A new recipe was selected");
 
-            if (originalItem != null)
-            {
-                RestoreOriginalCostMultiple();
-            }
+            //if (originalItem != null)
+            //{
+            //    RestoreOriginalCostMultiple();
+            //}
 
-            if (SelectedRecipeBox.ItemToCraft != null)
-            {
-                originalItem = SelectedRecipeBox.ItemToCraft;
-                CacheOriginalCostMultiple();
-            }
+            //if (SelectedRecipeBox.ItemToCraft != null)
+            //{
+            //    originalItem = SelectedRecipeBox.ItemToCraft;
+            //    CacheOriginalCostMultiple();
+            //}
         }
 
         // TODO: we need to clone the original cost to be able to restore the original costmultiple.
@@ -61,6 +62,8 @@ public class CraftModifierKeys : MonoBehaviour
 
             if (SelectedRecipeBox.ItemToCraft != null)
             {
+                RestoreOriginalCostMultiple();
+                CacheOriginalCostMultiple();
                 ModifyCostMultiple(SelectedRecipeBox.ItemToCraft.settings_recipe.NewCost, multiplier);
                 amountToCraft = SelectedRecipeBox.ItemToCraft.settings_recipe.AmountToCraft * multiplier;
             }
@@ -86,6 +89,7 @@ public class CraftModifierKeys : MonoBehaviour
 
     private void ModifyCostMultiple(CostMultiple[] newCost, int multiplier)
     {
+        //Debug.Log(BulkCrafting.ModNamePrefix + " modifying cost");
         foreach (var costMultiple in newCost)
         {
             costMultiple.amount *= multiplier;
@@ -94,6 +98,7 @@ public class CraftModifierKeys : MonoBehaviour
 
     private void RestoreOriginalCostMultiple()
     {
+        //Debug.Log(BulkCrafting.ModNamePrefix + " restoring original cost.");
         foreach (var pair in originalNewCost)
         {
             if (pair.Key != null)
