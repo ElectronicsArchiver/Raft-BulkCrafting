@@ -54,6 +54,17 @@ This mod is released 'as is' and may contain bugs. <br>
 If you have any problems, please create an **[Issue]**.
 
 <br>
+<br>
+
+## Building
+
+*Build the project by executing:*
+
+```shell
+Tools/Build.bat
+```
+
+<br>
 
 
 <!----------------------------------------------------------------------------->
