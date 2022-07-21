@@ -35,18 +35,24 @@ public class CraftModifierKeys : MonoBehaviour
         // We got a new selected recipe, or the first one.
         if (originalItem != SelectedRecipeBox.ItemToCraft)
         {
-            Debug.Log(BulkCrafting.ModNamePrefix + " A new recipe was selected");
+            if (originalItem != null)
+            {
+                RestoreOriginalCostMultiple();
+            }
 
-            //if (originalItem != null)
-            //{
-            //    RestoreOriginalCostMultiple();
-            //}
+            if (SelectedRecipeBox.ItemToCraft != null)
+            {
+                originalItem = SelectedRecipeBox.ItemToCraft;
+                CacheOriginalCostMultiple();
+            }
 
-            //if (SelectedRecipeBox.ItemToCraft != null)
-            //{
-            //    originalItem = SelectedRecipeBox.ItemToCraft;
-            //    CacheOriginalCostMultiple();
-            //}
+            if (leftShiftModifier)
+            {
+                Debug.Log($"{BulkCrafting.ModNamePrefix} A new recipe was selected while holding shift");
+                ModifyCostMultiple(SelectedRecipeBox.ItemToCraft.settings_recipe.NewCost, multiplier);
+                SetAmountToCraft();
+                SetCraftButtonTextMultiplier();
+            }
         }
 
         // TODO: we need to clone the original cost to be able to restore the original costmultiple.
@@ -55,7 +61,7 @@ public class CraftModifierKeys : MonoBehaviour
             leftShiftModifier = true;
 
             //Debug.Log("Left shift pressed");
-            craftButtonText.text = originalCraftButtonText + " x " + multiplier;
+            SetCraftButtonTextMultiplier();
 
             // TODO: this causes 10 hammers to be added to the slot, this is not what we want, it should add a hammer 10 times. depending on stack size
             //Traverse.Create(SelectedRecipeBox.ItemToCraft.settings_recipe).Field("amountToCraft").SetValue(SelectedRecipeBox.ItemToCraft.settings_recipe.AmountToCraft * multiplier);
@@ -65,7 +71,7 @@ public class CraftModifierKeys : MonoBehaviour
                 RestoreOriginalCostMultiple();
                 CacheOriginalCostMultiple();
                 ModifyCostMultiple(SelectedRecipeBox.ItemToCraft.settings_recipe.NewCost, multiplier);
-                amountToCraft = SelectedRecipeBox.ItemToCraft.settings_recipe.AmountToCraft * multiplier;
+                SetAmountToCraft();
             }
         }
 
@@ -85,6 +91,16 @@ public class CraftModifierKeys : MonoBehaviour
         {
             //Debug.Log("Left alt pressed");
         }
+    }
+
+    private void SetCraftButtonTextMultiplier()
+    {
+        craftButtonText.text = originalCraftButtonText + " x " + multiplier;
+    }
+
+    private void SetAmountToCraft()
+    {
+        amountToCraft = SelectedRecipeBox.ItemToCraft.settings_recipe.AmountToCraft * multiplier;
     }
 
     private void ModifyCostMultiple(CostMultiple[] newCost, int multiplier)
